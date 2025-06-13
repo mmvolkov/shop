@@ -796,7 +796,7 @@ $pomContent = @'
     <version>1.0</version>
     
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
     </properties>
     
     <dependencies>
