@@ -44,16 +44,15 @@ shop/
 
 ## Оглавление
 
-1. [Обзор проекта](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D0%BE%D0%B1%D0%B7%D0%BE%D1%80-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0)
-2. [Архитектура приложения](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D0%B0%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D0%B0-%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F)
-3. [Технологический стек](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D1%82%D0%B5%D1%85%D0%BD%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9-%D1%81%D1%82%D0%B5%D0%BA)
-4. [Структура базы данных](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%82%D1%83%D1%80%D0%B0-%D0%B1%D0%B0%D0%B7%D1%8B-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85)
-5. [API Endpoints](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#api-endpoints)
-6. [Система безопасности](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0-%D0%B1%D0%B5%D0%B7%D0%BE%D0%BF%D0%B0%D1%81%D0%BD%D0%BE%D1%81%D1%82%D0%B8)
-7. [Установка и запуск](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0-%D0%B8-%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA)
-8. [Тестирование](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)
-9. [Примеры использования](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F)
-10. [Дальнейшее развитие](https://claude.ai/chat/f51814f6-a700-493d-8de9-189565f54c3a#%D0%B4%D0%B0%D0%BB%D1%8C%D0%BD%D0%B5%D0%B9%D1%88%D0%B5%D0%B5-%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D1%82%D0%B8%D0%B5)
+1. Обзор проекта
+2. Архитектура приложения
+3. Технологический стек
+4. Структура базы данных
+5. API Endpoints
+6. Система безопасности
+7. Установка и запуск
+8. Тестирование
+9. Примеры использования
 
 ## Обзор проекта
 

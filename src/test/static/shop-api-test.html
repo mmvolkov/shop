@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестирование API Магазина</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .auth-info {
+            background: #e8f4f8;
+            border: 1px solid #b8e0ea;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .auth-info h3 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .token-display {
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #34495e;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .status.online {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status.offline {
+            background: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Тестирование API Магазина <span id="serverStatus" class="status offline">Offline</span></h1>
+
+    <div class="auth-info">
+        <h3>Информация об авторизации</h3>
+        <div>
+            <strong>Пользователь:</strong> <span id="currentUser">Не авторизован</span><br>
+            <strong>JWT Token:</strong> <div id="jwtToken" class="token-display">Отсутствует</div>
+            <strong>API Key:</strong> <div id="apiKey" class="token-display">Отсутствует</div>
+        </div>
+    </div>
+
+    <!-- 1. Авторизация -->
+    <div class="section">
+        <h2>1. Авторизация пользователя</h2>
+        <div class="grid">
+            <div>
+                <h3>Регистрация</h3>
+                <div class="form-group">
+                    <label>Имя пользователя:</label>
+                    <input type="text" id="regUsername" placeholder="user1">
+                </div>
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="regPassword" placeholder="password123">
+                </div>
+                <button onclick="register()">Зарегистрироваться</button>
+            </div>
+            <div>
+                <h3>Вход</h3>
+                <div class="form-group">
+                    <label>Имя пользователя:</label>
+                    <input type="text" id="loginUsername" placeholder="user1">
+                </div>
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="loginPassword" placeholder="password123">
+                </div>
+                <button onclick="login()">Войти</button>
+            </div>
+        </div>
+        <div id="authResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- 2. Категории -->
+    <div class="section">
+        <h2>3. Добавить новую категорию</h2>
+        <div class="form-group">
+            <label>Название категории:</label>
+            <input type="text" id="categoryName" placeholder="Электроника">
+        </div>
+        <div class="form-group">
+            <label>Описание:</label>
+            <input type="text" id="categoryDesc" placeholder="Электронные устройства и гаджеты">
+        </div>
+        <button onclick="createCategory()">Создать категорию</button>
+        <div id="categoryResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- 3. Товары -->
+    <div class="section">
+        <h2>4. Добавить новый товар</h2>
+        <div class="form-group">
+            <label>Название товара:</label>
+            <input type="text" id="itemName" placeholder="Ноутбук ASUS">
+        </div>
+        <div class="form-group">
+            <label>Описание:</label>
+            <input type="text" id="itemDesc" placeholder="Мощный игровой ноутбук">
+        </div>
+        <div class="form-group">
+            <label>Цена:</label>
+            <input type="number" id="itemPrice" placeholder="75000" step="0.01">
+        </div>
+        <div class="form-group">
+            <label>Количество:</label>
+            <input type="number" id="itemQuantity" placeholder="10">
+        </div>
+        <div class="form-group">
+            <label>Категория:</label>
+            <select id="itemCategory">
+                <option value="">Выберите категорию</option>
+            </select>
+        </div>
+        <button onclick="createItem()">Создать товар</button>
+        <div id="itemResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- 4. Просмотр товаров -->
+    <div class="section">
+        <h2>5-7. Просмотр товаров</h2>
+        <div class="grid">
+            <button onclick="getAllItems()">Показать все товары</button>
+            <button onclick="getAllCategories()">Показать все категории</button>
+            <div>
+                <select id="viewCategory" style="width: auto; display: inline-block;">
+                    <option value="">Выберите категорию</option>
+                </select>
+                <button onclick="getItemsByCategory()">Показать товары категории</button>
+            </div>
+        </div>
+        <div id="viewResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- 5. Обновление товара -->
+    <div class="section">
+        <h2>8. Изменение количества и цены товара</h2>
+        <div class="form-group">
+            <label>ID товара:</label>
+            <input type="number" id="updateItemId" placeholder="1">
+        </div>
+        <div class="form-group">
+            <label>Добавить количество (может быть отрицательным):</label>
+            <input type="number" id="updateQuantity" placeholder="5">
+        </div>
+        <div class="form-group">
+            <label>Новая цена (оставьте пустым, чтобы не менять):</label>
+            <input type="number" id="updatePrice" placeholder="80000" step="0.01">
+        </div>
+        <button onclick="updateItem()">Обновить товар</button>
+        <div id="updateResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- 6. Отгрузка -->
+    <div class="section">
+        <h2>9. Отгрузка товаров</h2>
+        <div class="form-group">
+            <label>ID товара:</label>
+            <input type="number" id="shipItemId" placeholder="1">
+        </div>
+        <div class="form-group">
+            <label>Количество для отгрузки:</label>
+            <input type="number" id="shipQuantity" placeholder="2">
+        </div>
+        <button onclick="shipItem()">Отгрузить товар</button>
+        <div id="shipResult" class="result" style="display:none;"></div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+    let authToken = '';
+    let userApiKey = '';
+
+    // Проверка статуса сервера
+    async function checkServerStatus() {
+        try {
+            const response = await fetch(API_BASE + '/categories');
+            document.getElementById('serverStatus').textContent = 'Online';
+            document.getElementById('serverStatus').className = 'status online';
+        } catch (error) {
+            document.getElementById('serverStatus').textContent = 'Offline';
+            document.getElementById('serverStatus').className = 'status offline';
+        }
+    }
+
+    // Вспомогательные функции
+    function showResult(elementId, message, isSuccess = true) {
+        const element = document.getElementById(elementId);
+        element.style.display = 'block';
+        element.className = 'result ' + (isSuccess ? 'success' : 'error');
+        element.innerHTML = '<pre>' + message + '</pre>';
+    }
+
+    function getHeaders(includeAuth = true) {
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        if (includeAuth && authToken) {
+            headers['Authorization'] = 'Bearer ' + authToken;
+        }
+        return headers;
+    }
+
+    // 1. Регистрация
+    async function register() {
+        const username = document.getElementById('regUsername').value;
+        const password = document.getElementById('regPassword').value;
+
+        try {
+            const response = await fetch(API_BASE + '/auth/register', {
+                method: 'POST',
+                headers: getHeaders(false),
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.text();
+            showResult('authResult', data, response.ok);
+        } catch (error) {
+            showResult('authResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 2. Вход
+    async function login() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const response = await fetch(API_BASE + '/auth/login', {
+                method: 'POST',
+                headers: getHeaders(false),
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                authToken = data.token;
+                userApiKey = data.apiKey;
+
+                document.getElementById('currentUser').textContent = username;
+                document.getElementById('jwtToken').textContent = authToken;
+                document.getElementById('apiKey').textContent = userApiKey;
+
+                showResult('authResult', 'Вход выполнен успешно!\nToken: ' + authToken + '\nAPI Key: ' + userApiKey);
+
+                // Загрузка категорий для выпадающих списков
+                loadCategories();
+            } else {
+                showResult('authResult', 'Ошибка входа', false);
+            }
+        } catch (error) {
+            showResult('authResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 3. Создание категории
+    async function createCategory() {
+        const name = document.getElementById('categoryName').value;
+        const description = document.getElementById('categoryDesc').value;
+
+        try {
+            const response = await fetch(API_BASE + '/categories', {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify({ name, description })
+            });
+
+            const data = await response.json();
+            showResult('categoryResult', JSON.stringify(data, null, 2), response.ok);
+
+            if (response.ok) {
+                loadCategories();
+            }
+        } catch (error) {
+            showResult('categoryResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 4. Создание товара
+    async function createItem() {
+        const item = {
+            name: document.getElementById('itemName').value,
+            description: document.getElementById('itemDesc').value,
+            price: parseFloat(document.getElementById('itemPrice').value),
+            quantity: parseInt(document.getElementById('itemQuantity').value),
+            categoryId: parseInt(document.getElementById('itemCategory').value)
+        };
+
+        try {
+            const response = await fetch(API_BASE + '/items', {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(item)
+            });
+
+            const data = await response.json();
+            showResult('itemResult', JSON.stringify(data, null, 2), response.ok);
+        } catch (error) {
+            showResult('itemResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 5. Получение всех товаров
+    async function getAllItems() {
+        try {
+            const response = await fetch(API_BASE + '/items', {
+                headers: getHeaders()
+            });
+
+            const data = await response.json();
+            showResult('viewResult', JSON.stringify(data, null, 2), response.ok);
+        } catch (error) {
+            showResult('viewResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 6. Получение всех категорий
+    async function getAllCategories() {
+        try {
+            const response = await fetch(API_BASE + '/categories', {
+                headers: getHeaders()
+            });
+
+            const data = await response.json();
+            showResult('viewResult', JSON.stringify(data, null, 2), response.ok);
+        } catch (error) {
+            showResult('viewResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 7. Получение товаров по категории
+    async function getItemsByCategory() {
+        const categoryId = document.getElementById('viewCategory').value;
+        if (!categoryId) {
+            showResult('viewResult', 'Выберите категорию', false);
+            return;
+        }
+
+        try {
+            const response = await fetch(API_BASE + '/items/category/' + categoryId, {
+                headers: getHeaders()
+            });
+
+            const data = await response.json();
+            showResult('viewResult', JSON.stringify(data, null, 2), response.ok);
+        } catch (error) {
+            showResult('viewResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 8. Обновление товара
+    async function updateItem() {
+        const itemId = document.getElementById('updateItemId').value;
+        const update = {};
+
+        const quantity = document.getElementById('updateQuantity').value;
+        const price = document.getElementById('updatePrice').value;
+
+        if (quantity) update.quantity = parseInt(quantity);
+        if (price) update.price = parseFloat(price);
+
+        try {
+            const response = await fetch(API_BASE + '/items/' + itemId, {
+                method: 'PUT',
+                headers: getHeaders(),
+                body: JSON.stringify(update)
+            });
+
+            const data = await response.json();
+            showResult('updateResult', JSON.stringify(data, null, 2), response.ok);
+        } catch (error) {
+            showResult('updateResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // 9. Отгрузка товара
+    async function shipItem() {
+        const shipment = {
+            itemId: parseInt(document.getElementById('shipItemId').value),
+            quantity: parseInt(document.getElementById('shipQuantity').value)
+        };
+
+        try {
+            const response = await fetch(API_BASE + '/shipment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-KEY': userApiKey
+                },
+                body: JSON.stringify(shipment)
+            });
+
+            const data = await response.text();
+            showResult('shipResult', data, response.ok);
+        } catch (error) {
+            showResult('shipResult', 'Ошибка: ' + error.message, false);
+        }
+    }
+
+    // Загрузка категорий для выпадающих списков
+    async function loadCategories() {
+        try {
+            const response = await fetch(API_BASE + '/categories', {
+                headers: getHeaders()
+            });
+
+            if (response.ok) {
+                const categories = await response.json();
+
+                const selects = ['itemCategory', 'viewCategory'];
+                selects.forEach(selectId => {
+                    const select = document.getElementById(selectId);
+                    select.innerHTML = '<option value="">Выберите категорию</option>';
+                    categories.forEach(cat => {
+                        select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                    });
+                });
+            }
+        } catch (error) {
+            console.error('Ошибка загрузки категорий:', error);
+        }
+    }
+
+    // Инициализация
+    checkServerStatus();
+    setInterval(checkServerStatus, 5000);
+</script>
+</body>
+</html>
