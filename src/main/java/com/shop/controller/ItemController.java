@@ -6,6 +6,7 @@ import com.shop.entity.Category;
 import com.shop.entity.Item;
 import com.shop.repository.CategoryRepository;
 import com.shop.repository.ItemRepository;
+import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,20 +45,32 @@ public class ItemController {
     public List<Item> getItemsByCategory(@PathVariable Long categoryId) {
         return itemRepository.findByCategoryId(categoryId);
     }
-    
+
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateItem(@PathVariable Long id, @RequestBody ItemUpdateDto dto) {
         Item item = itemRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Item not found"));
-        
+
         if (dto.getQuantity() != null) {
-            item.setQuantity(item.getQuantity() + dto.getQuantity());
+            item.setQuantity(item.getQuantity() + dto.getQuantity()); // Изменение количества товара (+/-)
         }
         
         if (dto.getPrice() != null) {
             item.setPrice(dto.getPrice());
         }
-        
+
+        if (dto.getCategoryId() != null) {
+            System.out.println("Trying to update category to: " + dto.getCategoryId());
+            Category category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + dto.getCategoryId()));
+            item.setCategory(category);
+            System.out.println("Category updated to: " + category.getName());
+        }
+
+        Item savedItem = itemRepository.save(item);
+        System.out.println("Item saved: " + savedItem);
         return ResponseEntity.ok(itemRepository.save(item));
     }
+
 }

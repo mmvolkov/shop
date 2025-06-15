@@ -1,5 +1,6 @@
 package com.shop.dto;
 
+import com.shop.entity.Category;
 import lombok.Data;
 import java.math.BigDecimal;
 

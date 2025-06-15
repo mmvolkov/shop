@@ -21,7 +21,7 @@ public class ShipmentController {
     @PostMapping
     public ResponseEntity<?> shipItem(@RequestHeader("X-API-KEY") String apiKey, 
                                     @RequestBody ShipmentDto dto) {
-        // РџСЂРѕРІРµСЂРєР° API РєР»СЋС‡Р°
+
         User user = userRepository.findByApiKey(apiKey)
             .orElseThrow(() -> new RuntimeException("Invalid API key"));
         

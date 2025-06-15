@@ -26,14 +26,16 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/shipment/**").authenticated()
-                .anyRequest().permitAll()
+                .requestMatchers("/api/shipment/**").permitAll()
+                .anyRequest().authenticated()
+                // .requestMatchers("/api/shipment/**").authenticated()
+                // .anyRequest().permitAll()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
